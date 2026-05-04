@@ -1,0 +1,57 @@
+name: Credimi APK Test
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: read
+
+concurrency:
+  group: credimi-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  credimi:
+    name: Build APK and run Credimi test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v4
+
+      - name: Install Android SDK dependencies
+        run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Build demo debug APK
+        run: ./gradlew --no-daemon :app:assembleDemoDebug
+
+      - name: Resolve APK path
+        id: apk
+        run: |
+          apk_file="$(find app/build/outputs/apk/demo/debug -type f -name '*.apk' | head -n 1)"
+          test -n "$apk_file"
+          echo "apk-file=$apk_file" >> "$GITHUB_OUTPUT"
+
+      - name: Run Credimi test
+        uses: ForkbombEu/credimi-test-action@main
+        with:
+          api-key: ${{ secrets.CREDIMI_API_KEY }}
+          pipeline-id: 'forkbomb-bv-andrea/eudiw-12-34-webuild-conformance-check'
+          runner-id: 'forkbomb-bv-andrea/android-cloud-credimi-1'
+          apk-file: ${{ steps.apk.outputs.apk-file }}
