@@ -46,5 +46,5 @@ jobs:
         with:
           api-key: ${{ secrets.CREDIMI_API_KEY }}
           pipeline-id: forkbomb-bv-andrea/eudiw-2026-02-35-get-pid-sd-jwt-vc-issuer-backend
-          runner-id: forkbomb-bv-andrea/android-cloud-credimi-1
+          runner-id: forkbomb-bv-andrea/raspi-android15-a1
           apk-file: app/build/outputs/apk/demo/debug/app-demo-debug.apk
