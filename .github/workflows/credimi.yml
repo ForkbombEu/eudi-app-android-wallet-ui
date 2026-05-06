@@ -41,17 +41,10 @@ jobs:
       - name: Build demo debug APK
         run: ./gradlew --no-daemon :app:assembleDemoDebug
 
-      - name: Resolve APK path
-        id: apk
-        run: |
-          apk_file="$(find app/build/outputs/apk/demo/debug -type f -name '*.apk' | head -n 1)"
-          test -n "$apk_file"
-          echo "apk-file=$apk_file" >> "$GITHUB_OUTPUT"
-
       - name: Run Credimi test
         uses: ForkbombEu/credimi-test-action@main
         with:
           api-key: ${{ secrets.CREDIMI_API_KEY }}
-          pipeline-id: 'forkbomb-bv-andrea/eudiw-12-34-webuild-conformance-check'
-          runner-id: 'forkbomb-bv-andrea/android-cloud-credimi-1'
-          apk-file: ${{ steps.apk.outputs.apk-file }}
+          pipeline-id: forkbomb-bv-andrea/eudiw-12-34-webuild-conformance-check
+          runner-id: forkbomb-bv-andrea/android-cloud-credimi-1
+          apk-file: app/build/outputs/apk/demo/debug/app-demo-debug.apk
