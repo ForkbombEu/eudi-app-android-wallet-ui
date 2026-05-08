@@ -1,4 +1,4 @@
-name: Credimi APK Tests
+name: Credimi APK Tests rerun
 
 on:
   pull_request:
