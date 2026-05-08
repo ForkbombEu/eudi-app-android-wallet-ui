@@ -42,7 +42,7 @@ jobs:
         run: ./gradlew --no-daemon :app:assembleDemoDebug
 
       - name: Run Credimi test
-        uses: ForkbombEu/credimi-test-action@v1
+        uses: ForkbombEu/credimi-test-action@v1.1.0
         with:
           api-key: ${{ secrets.CREDIMI_API_KEY }}
           apk-file: app/build/outputs/apk/demo/debug/app-demo-debug.apk
